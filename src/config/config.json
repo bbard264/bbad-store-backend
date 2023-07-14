@@ -1,0 +1,6 @@
+{
+  "productPerPage": {
+    "PageOne": 10,
+    "EachPage": 12
+  }
+}
