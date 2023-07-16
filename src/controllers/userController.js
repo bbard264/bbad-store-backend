@@ -46,6 +46,7 @@ exports.registerUser = async (req, res) => {
       const newUserID = await User.createUser(newUserDocument);
 
       // Registration successful
+      console.log('NewUserID:', newUserID);
       return res.status(200).json({ registerSuccess: true });
     } catch (error) {
       // Error occurred while saving the user to the database
@@ -59,27 +60,40 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-  const targetUser = await User.getUserByEmail(email);
-  if (!targetUser) {
-    res.status(403).json({ message: "Email or Password didn't exist" });
-  } else {
-    const isCorrectPassword = bcryptjs.compareSynce(
-      password,
-      targetUser.password
-    );
-    if (isCorrectPassword) {
-      const payload = {
-        name: targetUser.name,
-        id: targetUser._id,
-      };
-      const token = jwt.sign(payload, 'bbad', { expiresIn: 3600 });
+  try {
+    const targetUser = await User.getUserByEmail(email);
 
-      res.status(200).send({
-        token: token,
-        message: 'Login successful.',
-      });
+    if (!targetUser) {
+      res
+        .status(403)
+        .json({ noEmailPass: true, message: "Email or Password didn't exist" });
     } else {
-      res.status(400).json({ message: "Email or Password didn't exist" });
+      const isCorrectPassword = bcryptjs.compareSync(
+        password,
+        targetUser.password
+      );
+      if (isCorrectPassword) {
+        const payload = {
+          name: targetUser.name,
+          id: targetUser._id,
+        };
+        const token = jwt.sign(payload, 'bbad', { expiresIn: 3600 });
+
+        res.status(200).send({
+          token: token,
+          message: 'Login successful.',
+        });
+      } else {
+        res.status(403).json({
+          noEmailPass: true,
+          message: "Email or Password didn't exist",
+        });
+      }
     }
+  } catch (error) {
+    res.status(400).json({
+      canLogin: false,
+      message: "Can't Login, Please try again later",
+    });
   }
 };

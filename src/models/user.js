@@ -28,11 +28,11 @@ class User {
   static async createUser(userData) {
     try {
       const db = getDB();
-      console.log(userData);
+
       const result = await db
         .collection(this.collectionName)
         .insertOne(userData);
-      console.log(result);
+
       return result.insertedId;
     } catch (error) {
       console.error('Error occurred during user creation:', error);
