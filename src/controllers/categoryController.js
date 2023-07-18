@@ -1,10 +1,10 @@
 const Category = require('../models/category');
 
-exports.getCategoryList = async (req, res) => {
+exports.getCategoryLastPage = async (req, res) => {
   try {
-    const categoryList = await Category.getCategoryList();
-    res.json(categoryList);
+    const categoryMap = await Category.buildCategoryMap();
+    res.json(categoryMap);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve category list' });
+    res.status(500).json({ error: 'Failed to retrieve category&Lastpage' });
   }
 };

@@ -74,9 +74,10 @@ exports.loginUser = async (req, res) => {
       );
       if (isCorrectPassword) {
         const payload = {
-          name: targetUser.name,
+          name: targetUser.displayname,
           id: targetUser._id,
         };
+
         const token = jwt.sign(payload, 'bbad', { expiresIn: 3600 });
 
         res.status(200).send({
@@ -95,5 +96,18 @@ exports.loginUser = async (req, res) => {
       canLogin: false,
       message: "Can't Login, Please try again later",
     });
+  }
+};
+
+exports.getUserInfo = async (req, res) => {
+  const userInfo = req.user;
+  try {
+    delete userInfo.password;
+    res.status(200).json({ userInfo: userInfo });
+  } catch (error) {
+    console.error('Error occurred during user retrieval:', error);
+    res
+      .status(500)
+      .json({ error: 'Failed to retrieve user. Please try again later.' });
   }
 };

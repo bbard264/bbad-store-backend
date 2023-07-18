@@ -55,7 +55,7 @@ class User {
   static async getUserById(userId) {
     try {
       const db = getDB();
-      const query = { _id: ObjectId(userId) };
+      const query = { _id: new ObjectId(userId) };
       const user = await db.collection(this.collectionName).findOne(query);
       return user;
     } catch (error) {
