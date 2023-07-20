@@ -164,3 +164,13 @@ exports.changeUserPassword = async (req, res) => {
     });
   }
 };
+
+exports.checkAuthen = async (req, res) => {
+  try {
+  } catch (error) {
+    res.status(500).json({
+      changePassword: false,
+      error: `Can't Check Authentication`,
+    });
+  }
+};

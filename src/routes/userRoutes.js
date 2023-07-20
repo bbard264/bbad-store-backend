@@ -21,4 +21,6 @@ router.put(
   userController.changeUserPassword
 );
 
+router.get('/checkAuthentication', authentication, userController.checkAuthen);
+
 module.exports = router;
