@@ -63,6 +63,37 @@ class User {
       throw new Error('Failed to retrieve user. Please try again later.');
     }
   }
+
+  static async updateUser(userId, updateData) {
+    try {
+      if (!!updateData.birthdate) {
+        updateData.birthdate = new Date(updateData.birthdate);
+      }
+      if (!!updateData.photo && updateData.photo !== '') {
+        updateData.photo = `/images/user/userphoto/${updateData.photo}`;
+      }
+
+      const db = getDB();
+      const query = { _id: userId };
+      const updateResult = await db
+        .collection(this.collectionName)
+        .updateOne(query, { $set: updateData });
+
+      if (updateResult.modifiedCount === 1) {
+        // Return true if the user was successfully updated
+        return true;
+      } else if (updateResult.matchedCount === 0) {
+        // Throw an error if the user was not found
+        throw new Error('User not found.');
+      } else {
+        // Return false if no changes were applied (data is the same)
+        return false;
+      }
+    } catch (error) {
+      console.error('Error occurred during user update:', error);
+      throw new Error('Failed to update user. Please try again later.');
+    }
+  }
 }
 
 module.exports = User;

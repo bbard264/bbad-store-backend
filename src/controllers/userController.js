@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-
 const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res) => {
@@ -109,5 +108,59 @@ exports.getUserInfo = async (req, res) => {
     res
       .status(500)
       .json({ error: 'Failed to retrieve user. Please try again later.' });
+  }
+};
+
+exports.updateUserInfo = async (req, res) => {
+  try {
+    const updateResult = await User.updateUser(req.user._id, req.body);
+    if (!updateResult) {
+      return res.status(200).json({ updateResult: false });
+    }
+    res.status(200).json({ updateResult: true });
+  } catch (error) {
+    console.error(`Can't not Update Infomation`, error);
+    res.status(500).json({ error: `Can't not Update Infomation` });
+  }
+};
+
+exports.changeUserPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    // check old pass is matched?
+    let isPasswordMatched = bcryptjs.compareSync(
+      oldPassword,
+      req.user.password
+    );
+
+    if (isPasswordMatched) {
+      // hashnew password
+      const salt = bcryptjs.genSaltSync(12);
+      const hashedNewPassword = bcryptjs.hashSync(newPassword, salt);
+      const updateResult = await User.updateUser(req.user._id, {
+        password: hashedNewPassword,
+      });
+      if (!updateResult) {
+        return res.status(200).json({
+          changePassword: false,
+          message: `Password have not changed`,
+        });
+      }
+      res.status(200).json({
+        changePassword: true,
+        message: `Password Changing Successful!`,
+      });
+    } else {
+      res
+        .status(200)
+        .json({ changePassword: false, message: `Old password is incorrect` });
+    }
+  } catch (error) {
+    console.error(`Can't change password, Please try again later`, error);
+    res.status(500).json({
+      changePassword: false,
+      error: `Can't change password, Please try again later`,
+    });
   }
 };
