@@ -8,7 +8,7 @@ exports.getLastPage = async (req, res) => {
     if (lastPage === undefined) {
       res.status(404).json({ error: 'Last page not found' });
     } else {
-      res.send(lastPage.toString());
+      res.status(200).send(lastPage.toString());
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve lastPage' });
@@ -43,7 +43,7 @@ exports.getProductById = async (req, res) => {
   const productId = req.params.productId;
   try {
     const product = await Product.getProductById(productId);
-    res.json(product);
+    res.status(200).json(product);
   } catch (error) {
     console.log(`Failed to Send Productid ${productId}`);
     res.status(404).json({ error: error.message });

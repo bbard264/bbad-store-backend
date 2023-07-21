@@ -1,5 +1,4 @@
 const { getDB } = require('../database');
-const Config = require('../config/config');
 const { ObjectId } = require('mongodb');
 
 class User {
