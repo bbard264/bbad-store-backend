@@ -23,6 +23,7 @@ class Order {
             _id: 1,
             product_name: 1,
             product_price: 1,
+            product_url_name: 1,
             option: 1,
             product_photo: { $slice: 1 },
           })
