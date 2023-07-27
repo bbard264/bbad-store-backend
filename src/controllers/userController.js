@@ -174,3 +174,45 @@ exports.checkAuthen = async (req, res) => {
     });
   }
 };
+
+exports.getFavorite = async (req, res) => {
+  try {
+    const response = await User.getFavorite({ user_id: req.user._id });
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Failed to get favorites:', error);
+    res
+      .status(500)
+      .json({ getFavorites: false, message: 'Failed to retrieve favorites' });
+  }
+};
+
+exports.addFavorite = async (req, res) => {
+  try {
+    const response = await User.addFavorite({
+      user_id: req.user._id,
+      product_id: req.body.product_id,
+    });
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Failed to get favorites:', error);
+    res
+      .status(500)
+      .json({ getFavorites: false, message: 'Failed to retrieve favorites' });
+  }
+};
+
+exports.removeFavorite = async (req, res) => {
+  try {
+    const response = await User.removeFavorite({
+      user_id: req.user._id,
+      product_id: req.body.product_id,
+    });
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Failed to get favorites:', error);
+    res
+      .status(500)
+      .json({ getFavorites: false, message: 'Failed to retrieve favorites' });
+  }
+};

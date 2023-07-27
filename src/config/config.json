@@ -2,5 +2,86 @@
   "productPerPage": {
     "PageOne": 10,
     "EachPage": 12
-  }
+  },
+
+  "User_Ranks": [
+    {
+      "_id": "rank1",
+      "rank_name": "Casual"
+    },
+    {
+      "_id": "rank2",
+      "rank_name": "Regular"
+    },
+    {
+      "_id": "rank3",
+      "rank_name": "Supporter"
+    },
+    {
+      "_id": "rank4",
+      "rank_name": "Super Supporter"
+    },
+    {
+      "_id": "vip",
+      "rank_name": "VIP"
+    }
+  ],
+
+  "Categories": [
+    {
+      "_id": "wearables",
+      "category_name": "Wearables"
+    },
+    {
+      "_id": "collectibles",
+      "category_name": "Collectibles"
+    },
+    {
+      "_id": "art-books",
+      "category_name": "Art Books"
+    },
+    {
+      "_id": "digital-products",
+      "category_name": "Digital Products"
+    }
+  ],
+
+  "Order_Status": [
+    {
+      "_id": "stage1",
+      "stage_name": "Order Place"
+    },
+    {
+      "_id": "stage2",
+      "stage_name": "Order Confirm"
+    },
+    {
+      "_id": "stage3",
+      "stage_name": "Payment Confirm"
+    },
+    {
+      "_id": "stage4",
+      "stage_name": "Packed"
+    },
+    {
+      "_id": "stage5",
+      "stage_name": "Shipping"
+    },
+    {
+      "_id": "stage6",
+      "stage_name": "Delivered"
+    },
+    {
+      "_id": "return",
+      "stage_name": "Cancel:Return"
+    },
+    {
+      "_id": "refund",
+      "stage_name": "Cancel:Refund"
+    },
+    {
+      "_id": "cancel",
+      "stage_name": "Cancel"
+    }
+  ]
 }

@@ -1,10 +1,9 @@
+const Config = require('../config/config');
 const Order = require('../models/order');
 
 exports.getCart = async (req, res) => {
-  const user = req.user._id;
-
   try {
-    const response = await Order.getCart(user);
+    const response = await Order.getCart({ user_id: req.user._id });
     res.status(200).json(response);
   } catch (error) {
     console.error('Failed to retrieve cart:', error);
@@ -16,9 +15,11 @@ exports.getCart = async (req, res) => {
 };
 
 exports.addToCart = async (req, res) => {
-  const user = req.user._id;
   try {
-    const response = await Order.addToCart(user, req.body.product_id);
+    const response = await Order.addToCart({
+      user_id: req.user._id,
+      product_id: req.body.product_id,
+    });
     res.status(200).json(response);
   } catch (error) {
     console.error('Failed to add product to cart:', error);
@@ -29,10 +30,11 @@ exports.addToCart = async (req, res) => {
 };
 
 exports.removeFromCart = async (req, res) => {
-  const user = req.user._id;
-  const productId = req.body;
   try {
-    const response = await Order.removeFromCart(user, productId);
+    const response = await Order.removeFromCart({
+      user_id: req.user._id,
+      product_id: req.body.product_id,
+    });
     res.status(200).json(response);
   } catch (error) {
     console.error('Failed to remove product from cart:', error);
@@ -40,5 +42,56 @@ exports.removeFromCart = async (req, res) => {
       removeFromCart: false,
       message: `Can't remove product from cart`,
     });
+  }
+};
+
+exports.createOrder = async (req, res) => {
+  try {
+    const newOrder = req.body;
+    const user_id = req.user._id;
+    newOrder.user_id = user_id;
+    console.log(newOrder);
+    const response = await Order.createOrder(newOrder);
+
+    res.status(201).json({
+      createOrder: true,
+      message: `Order created successfully. Order ID:${response} `,
+    });
+  } catch (error) {
+    scrollX;
+    console.error('Failed to create order:', error);
+    res
+      .status(500)
+      .json({ createOrder: false, message: `Failed to create order` });
+  }
+};
+
+exports.getOrder = async (req, res) => {
+  try {
+    const response = await Order.getOrder({ user_id: req.user._id });
+    res.status(201).json({
+      getOrder: true,
+      message: `get Order Complete form user_id:${req.user._id} `,
+      data: response,
+    });
+  } catch (error) {
+    console.error('Failed to get order:', error);
+    res.status(500).json({ getOrder: false, message: `Failed to get order` });
+  }
+};
+
+exports.getOrderStatus = async (req, res) => {
+  try {
+    const response = await Config.readConfigFile('Order_Status');
+    res.status(201).json({
+      getOrderStatus: true,
+      message: `get Order status complete `,
+      data: response,
+    });
+  } catch (error) {
+    console.error('Failed to get order status:', error);
+    res
+      .status(500)
+      .json({ getOrderStatus: false, message: `Failed to get order status` });
   }
 };
