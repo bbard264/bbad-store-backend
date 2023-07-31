@@ -29,18 +29,18 @@ exports.createNewReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
   try {
-    let reviews;
+    let reviews_query;
 
-    if (req.body.from === 'product') {
-      reviews = await Reviews.getReviews({
-        from: req.body.from,
-        _id: req.body.product_id,
-      });
-    } else if (req.body.from === 'user') {
-      reviews = await Reviews.getReviews({
-        from: req.body.from,
+    if (req.query.from === 'user') {
+      reviews_query = {
+        from: req.query.from,
         _id: req.user._id,
-      });
+      };
+    } else if (req.query.from === 'product') {
+      reviews_query = {
+        from: req.query.from,
+        _id: req.query.product_id,
+      };
     } else {
       // Invalid or missing 'from' value in the request body
       return res.status(400).json({
@@ -49,7 +49,9 @@ exports.getReviews = async (req, res) => {
       });
     }
 
-    if (reviews.length === 0) {
+    const reviews_result = await Reviews.getReviews(reviews_query);
+
+    if (reviews_result.length === 0) {
       // No reviews found for the specified product/user
       return res.status(404).json({
         isSuccess: true,
@@ -61,7 +63,7 @@ exports.getReviews = async (req, res) => {
     res.status(200).json({
       isSuccess: true,
       message: 'Reviews retrieved successfully.',
-      data: reviews,
+      data: reviews_result,
     });
   } catch (error) {
     console.error('Error occurred during review retrieval:', error);
@@ -96,10 +98,10 @@ exports.removeReview = async (req, res) => {
 
 exports.modifyReview = async (req, res) => {
   try {
-    await Reviews.updateReviewById({
+    await Reviews.modifyReview({
       _id: req.body._id,
       user_id: req.user._id,
-      rate: req.body.rate,
+      rating: req.body.rating,
       body: req.body.body,
     });
 

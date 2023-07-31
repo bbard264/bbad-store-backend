@@ -23,7 +23,7 @@ router.put(
 
 router.get('/getFavorite', authentication, userController.getFavorite);
 router.put('/addFavorite', authentication, userController.addFavorite);
-router.put('/removeFavorite', authentication, userController.removeFavorite);
+router.delete('/removeFavorite', authentication, userController.removeFavorite);
 
 router.get('/checkAuthentication', authentication, userController.checkAuthen);
 

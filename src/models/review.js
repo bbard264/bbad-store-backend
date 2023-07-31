@@ -23,7 +23,7 @@ class Reviews {
         user_id: new ObjectId(props.user._id),
         user_display_name: props.user.displayname,
         user_photo: props.user.photo,
-        rating: props.rate,
+        rating: props.rating,
         body: props.body,
         created_at: new Date(),
         modify: false,
@@ -44,16 +44,61 @@ class Reviews {
   static async getReviews(props) {
     try {
       const db = getDB();
+
       if (props.from === 'user') {
-        const reviews = await db
-          .collection(this.collectionName)
-          .find({ user_id: new ObjectId(props._id) })
+        const user_id = new ObjectId(props._id);
+
+        const result = await db
+          .collection('Orders')
+          .aggregate([
+            { $match: { user_id: user_id } },
+            { $unwind: '$items' },
+            {
+              $lookup: {
+                from: this.collectionName,
+                localField: 'items.product_id',
+                foreignField: 'product_id',
+                as: 'review',
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                user_id: 1,
+                product_id: '$items.product_id',
+                product_name: '$items.property.product_name',
+                product_photo: '$items.property.product_photo',
+                review: {
+                  $cond: {
+                    if: { $eq: [{ $size: '$review' }, 0] },
+                    then: {},
+                    else: {
+                      review_id: { $arrayElemAt: ['$review._id', 0] },
+                      rating: { $arrayElemAt: ['$review.rating', 0] },
+                      body: { $arrayElemAt: ['$review.body', 0] },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$product_id', // Group by the product_id field directly
+                user_id: { $first: '$user_id' },
+                product_name: { $first: '$product_name' },
+                product_photo: { $first: '$product_photo' },
+                review: { $first: '$review' },
+              },
+            },
+          ])
           .toArray();
-        return reviews;
+
+        return result;
       } else if (props.from === 'product') {
+        const product_id = new ObjectId(props._id);
         const reviews = await db
           .collection(this.collectionName)
-          .find({ product_id: new ObjectId(props._id) })
+          .find({ product_id: product_id })
           .toArray();
         return reviews;
       }
@@ -100,7 +145,7 @@ class Reviews {
       }
 
       // Check if the user is authorized to modify the review
-      if (existingReview.user_id !== props.user_id) {
+      if (existingReview.user_id.toString() !== props.user_id.toString()) {
         throw new Error('You are not authorized to modify this review.');
       }
 
@@ -108,7 +153,7 @@ class Reviews {
         { _id: new ObjectId(props._id) },
         {
           $set: {
-            rating: props.rate,
+            rating: props.rating,
             body: props.body,
             modify: true,
             updated_at: new Date(),

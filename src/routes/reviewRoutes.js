@@ -12,6 +12,6 @@ router.post(
 );
 router.get('/getReviewsByUser', authentication, reviewController.getReviews);
 router.get('/getReviewsByProduct', reviewController.getReviews);
-router.put('/removeReview', authentication, reviewController.removeReview);
+router.delete('/removeReview', authentication, reviewController.removeReview);
 router.put('/modifyReview', authentication, reviewController.modifyReview);
 module.exports = router;
