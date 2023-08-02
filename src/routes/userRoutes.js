@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const passport = require('passport');
 const upload = require('../config/services/multerUpload');
-
-const authentication = passport.authenticate('jwt', { session: false });
+const authentication = require('../config/passport/authentication');
 
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);

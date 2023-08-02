@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const reviewController = require('../controllers/reviewController');
-const passport = require('passport');
-
-const authentication = passport.authenticate('jwt', { session: false });
+const authentication = require('../config/passport/authentication');
 
 router.post(
   '/createNewReview',
@@ -14,4 +12,5 @@ router.get('/getReviewsByUser', authentication, reviewController.getReviews);
 router.get('/getReviewsByProduct', reviewController.getReviews);
 router.delete('/removeReview', authentication, reviewController.removeReview);
 router.put('/modifyReview', authentication, reviewController.modifyReview);
+
 module.exports = router;

@@ -10,6 +10,13 @@ const reviewRoutes = require('./routes/reviewRoutes');
 
 require('./config/passport/passport');
 
+const originalConsoleLog = console.log;
+
+console.log = (...args) => {
+  const currentDateTime = new Date().toLocaleString();
+  originalConsoleLog(`[${currentDateTime}]`, ...args);
+};
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -18,11 +25,14 @@ const logRequests = (req, res, next) => {
   next();
 };
 
-app.use('/images', logRequests, express.static('./images', { maxAge: 86400 }));
-app.use('/api/product', logRequests, productRoutes);
-app.use('/api/category', logRequests, categoryRoutes);
-app.use('/api/user', logRequests, userRoutes);
-app.use('/api/order', logRequests, orderRoutes);
-app.use('/api/review', logRequests, reviewRoutes);
+// Apply logRequests middleware to every incoming request
+app.use(logRequests);
+
+app.use('/images', express.static('./images', { maxAge: 86400 }));
+app.use('/api/product', productRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/order', orderRoutes);
+app.use('/api/review', reviewRoutes);
 
 module.exports = app;

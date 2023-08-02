@@ -53,7 +53,7 @@ exports.getReviews = async (req, res) => {
 
     if (reviews_result.length === 0) {
       // No reviews found for the specified product/user
-      return res.status(404).json({
+      return res.status(200).json({
         isSuccess: true,
         message: 'No reviews found for the specified product/user.',
         data: [],
