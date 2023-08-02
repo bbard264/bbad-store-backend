@@ -34,6 +34,9 @@ class Reviews {
         .collection(this.collectionName)
         .insertOne(newReview);
 
+      console.log(
+        'REVIEW_Creation Complete...new review_ID:' + result.insertedId
+      );
       return result.insertedId;
     } catch (error) {
       console.error('Error occurred during review creation:', error);
@@ -92,7 +95,9 @@ class Reviews {
             },
           ])
           .toArray();
-
+        console.log(
+          'REVIEW_Sending Reviews Complete...to user_ID:' + props._id
+        );
         return result;
       } else if (props.from === 'product') {
         const product_id = new ObjectId(props._id);
@@ -100,6 +105,9 @@ class Reviews {
           .collection(this.collectionName)
           .find({ product_id: product_id })
           .toArray();
+        console.log(
+          'REVIEW_Sending Reviews Complete...to product_ID:' + props._id
+        );
         return reviews;
       }
     } catch (error) {
@@ -111,13 +119,12 @@ class Reviews {
   static async removeReview(props) {
     try {
       const db = getDB();
-
       const result = await db
         .collection(this.collectionName)
-        .deleteOne({ _id: new ObjectId(props.review_id) });
+        .deleteOne({ _id: new ObjectId(props._id) });
 
       if (result.deletedCount === 1) {
-        console.log('Review removed successfully.');
+        console.log('REVIEW_Remove successfully.... review_id:' + props._id);
       } else {
         throw new Error('Review not found. No review was removed.');
       }
@@ -164,6 +171,7 @@ class Reviews {
       if (result.modifiedCount !== 1) {
         throw new Error('Failed to modify the review. Please try again later.');
       }
+      console.log('REVIEW_Modify Complete....review_id:' + props._id);
     } catch (error) {
       console.error('Error occurred during review modification:', error);
       throw new Error('Failed to modify the review. Please try again later.');

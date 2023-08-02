@@ -39,7 +39,7 @@ exports.getReviews = async (req, res) => {
     } else if (req.query.from === 'product') {
       reviews_query = {
         from: req.query.from,
-        _id: req.query.product_id,
+        _id: req.query._id,
       };
     } else {
       // Invalid or missing 'from' value in the request body
@@ -76,7 +76,7 @@ exports.getReviews = async (req, res) => {
 
 exports.removeReview = async (req, res) => {
   try {
-    await Reviews.removeReview({ review_id: req.body._id });
+    await Reviews.removeReview({ _id: req.query.review_id });
     res
       .status(200)
       .json({ isSuccess: true, message: 'Review removed successfully.' });
