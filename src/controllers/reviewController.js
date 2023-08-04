@@ -34,12 +34,12 @@ exports.getReviews = async (req, res) => {
     if (req.query.from === 'user') {
       reviews_query = {
         from: req.query.from,
-        _id: req.user._id,
+        user_id: req.user._id,
       };
     } else if (req.query.from === 'product') {
       reviews_query = {
         from: req.query.from,
-        _id: req.query._id,
+        product_id: req.query._id,
       };
     } else {
       // Invalid or missing 'from' value in the request body

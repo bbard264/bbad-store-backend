@@ -33,8 +33,9 @@ exports.removeFromCart = async (req, res) => {
   try {
     const response = await Order.removeFromCart({
       user_id: req.user._id,
-      product_id: req.body.product_id,
+      product_id: req.query.product_id,
     });
+    console.log(response);
     res.status(200).json(response);
   } catch (error) {
     console.error('Failed to remove product from cart:', error);
@@ -50,7 +51,6 @@ exports.createOrder = async (req, res) => {
     const newOrder = req.body;
     const user_id = req.user._id;
     newOrder.user_id = user_id;
-    console.log(newOrder);
     const response = await Order.createOrder(newOrder);
 
     res.status(201).json({
@@ -58,7 +58,6 @@ exports.createOrder = async (req, res) => {
       message: `Order created successfully. Order ID:${response} `,
     });
   } catch (error) {
-    scrollX;
     console.error('Failed to create order:', error);
     res
       .status(500)

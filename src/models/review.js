@@ -46,7 +46,7 @@ class Reviews {
       const db = getDB();
 
       if (props.from === 'user') {
-        const user_id = new ObjectId(props._id);
+        const user_id = new ObjectId(props.user_id);
 
         const result = await db
           .collection('Orders')
@@ -56,11 +56,26 @@ class Reviews {
             {
               $lookup: {
                 from: this.collectionName,
-                localField: 'items.product_id',
-                foreignField: 'product_id',
+                let: {
+                  user_id: '$items.user_id',
+                  product_id: '$items.product_id',
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ['$user_id', '$$user_id'] },
+                          { $eq: ['$product_id', '$$product_id'] },
+                        ],
+                      },
+                    },
+                  },
+                ],
                 as: 'review',
               },
             },
+
             {
               $project: {
                 _id: 0,
@@ -70,7 +85,9 @@ class Reviews {
                 product_photo: '$items.property.product_photo',
                 review: {
                   $cond: {
-                    if: { $eq: [{ $size: '$review' }, 0] },
+                    if: {
+                      $and: [{ $eq: [{ $size: '$review' }, 0] }],
+                    },
                     then: {},
                     else: {
                       review_id: { $arrayElemAt: ['$review._id', 0] },
@@ -83,7 +100,7 @@ class Reviews {
             },
             {
               $group: {
-                _id: '$product_id', // Group by the product_id field directly
+                _id: '$product_id',
                 user_id: { $first: '$user_id' },
                 product_name: { $first: '$product_name' },
                 product_photo: { $first: '$product_photo' },
@@ -92,10 +109,9 @@ class Reviews {
             },
           ])
           .toArray();
-
         return result;
       } else if (props.from === 'product') {
-        const product_id = new ObjectId(props._id);
+        const product_id = new ObjectId(props.product_id);
         const reviews = await db
           .collection(this.collectionName)
           .find({ product_id: product_id })

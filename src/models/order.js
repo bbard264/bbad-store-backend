@@ -120,7 +120,7 @@ class Order {
       const query = { user_id: new ObjectId(props.user_id) };
 
       if (props.product_id === 'all') {
-        await db
+        const response = await db
           .collection(this.CartCollections)
           .updateOne(query, { $unset: { items: 1 } });
         return {
@@ -128,13 +128,23 @@ class Order {
           message: 'Remove all productId in cart',
         };
       } else {
-        await db.collection(this.CartCollections).updateOne(query, {
-          $pull: { items: new ObjectId(props.product_id) },
-        });
-        return {
-          removeFromCart: true,
-          message: `Remove productId ${props.product_id} in cart`,
-        };
+        const response = await db
+          .collection(this.CartCollections)
+          .updateOne(query, {
+            $pull: { items: new ObjectId(props.product_id) },
+          });
+
+        if (response.modifiedCount > 0) {
+          return {
+            removeFromCart: true,
+            message: `Remove productId ${props.product_id} in cart`,
+          };
+        } else {
+          return {
+            removeFromCart: false,
+            message: `Product with id ${props.product_id} not found in the cart`,
+          };
+        }
       }
     } catch (error) {
       console.error('Error occurred during remove product in cart:', error);
@@ -148,6 +158,7 @@ class Order {
       orderData.items.forEach((item) => {
         item.product_id = new ObjectId(item.product_id);
       });
+      console.log(orderData);
       console.log(orderData.items[0]);
       const db = getDB();
       const result = await db

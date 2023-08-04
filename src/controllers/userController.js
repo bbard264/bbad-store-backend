@@ -3,9 +3,10 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res) => {
-  const { email, displayName, password } = req.body;
+  console.log(req.body);
+  const { email, displayname, password } = req.body;
 
-  if (!email || !password || !displayName) {
+  if (!email || !password || !displayname) {
     return res
       .status(400)
       .json({ error: 'Email, password, and display name are required fields' });
@@ -13,23 +14,23 @@ exports.registerUser = async (req, res) => {
 
   // Check if email or name already exists in the database
   const targetEmail = await User.checkDuplicateField('email', email);
-  const targetDisplayName = await User.checkDuplicateField(
+  const targetDisplayname = await User.checkDuplicateField(
     'displayname',
-    displayName
+    displayname
   );
 
-  if (targetEmail && targetDisplayName) {
+  if (targetEmail && targetDisplayname) {
     // Both email and display name already exist
 
     return res
       .status(403)
-      .json({ registerError: { emailIsDup: true, displayNameDup: true } });
+      .json({ registerError: { emailIsDup: true, displaynameDup: true } });
   } else if (targetEmail) {
     // Email already exists
     return res.status(403).json({ registerError: { emailIsDup: true } });
-  } else if (targetDisplayName) {
+  } else if (targetDisplayname) {
     // Display name already exists
-    return res.status(403).json({ registerError: { displayNameDup: true } });
+    return res.status(403).json({ registerError: { displaynameDup: true } });
   } else {
     try {
       const salt = bcryptjs.genSaltSync(12);
@@ -37,7 +38,7 @@ exports.registerUser = async (req, res) => {
       // Create a new user instance
       const newUserDocument = {
         email: email,
-        displayname: displayName,
+        displayname: displayname,
         password: hashedPassword,
         create_date: new Date(), // Add the current timestamp
       };
@@ -206,7 +207,7 @@ exports.removeFavorite = async (req, res) => {
   try {
     const response = await User.removeFavorite({
       user_id: req.user._id,
-      product_id: req.body.product_id,
+      product_id: req.query.product_id,
     });
     res.status(201).json(response);
   } catch (error) {
