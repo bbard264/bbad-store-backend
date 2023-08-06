@@ -33,7 +33,15 @@ class User {
         .collection(this.collectionName)
         .insertOne(userData);
 
-      return result.insertedId;
+      const newUserId = result.insertedId;
+      const photoPath = `/images/user/userphoto/${newUserId}-profile100x100.jpg`;
+
+      // Update the newly inserted document with the photo field
+      await db
+        .collection(this.collectionName)
+        .updateOne({ _id: newUserId }, { $set: { photo: photoPath } });
+
+      return newUserId;
     } catch (error) {
       console.error('Error occurred during user creation:', error);
       throw new Error('Failed to create user. Please try again later.');

@@ -168,10 +168,14 @@ exports.changeUserPassword = async (req, res) => {
 
 exports.checkAuthen = async (req, res) => {
   try {
+    res.status(200).json({
+      isSuccess: true,
+      error: `Authenticated!`,
+    });
   } catch (error) {
     res.status(500).json({
-      changePassword: false,
-      error: `Can't Check Authentication`,
+      isSuccess: false,
+      error: `Error while authenticating`,
     });
   }
 };

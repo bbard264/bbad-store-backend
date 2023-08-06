@@ -54,11 +54,34 @@ class Reviews {
             { $match: { user_id: user_id } },
             { $unwind: '$items' },
             {
+              $project: {
+                user_id: 1,
+                product_id: '$items.product_id',
+                product_name: '$items.property.product_name',
+                product_photo: '$items.property.product_photo',
+              },
+            },
+            {
+              $group: {
+                _id: '$user_id',
+                products: {
+                  $addToSet: {
+                    product_id: '$product_id',
+                    product_name: '$product_name',
+                    product_photo: '$product_photo',
+                  },
+                },
+              },
+            },
+            {
+              $unwind: '$products',
+            },
+            {
               $lookup: {
                 from: this.collectionName,
                 let: {
-                  user_id: '$items.user_id',
-                  product_id: '$items.product_id',
+                  user_id: '$_id',
+                  product_id: '$products.product_id',
                 },
                 pipeline: [
                   {
@@ -71,44 +94,41 @@ class Reviews {
                       },
                     },
                   },
+                  {
+                    $project: {
+                      _id: 1,
+                      rating: 1,
+                      body: 1,
+                      created_at: 1,
+                      modify: 1,
+                      updated_at: 1,
+                    },
+                  },
                 ],
-                as: 'review',
+                as: 'reviews',
               },
             },
-
+            {
+              $unwind: {
+                path: '$reviews',
+                preserveNullAndEmptyArrays: true,
+              },
+            },
             {
               $project: {
                 _id: 0,
-                user_id: 1,
-                product_id: '$items.product_id',
-                product_name: '$items.property.product_name',
-                product_photo: '$items.property.product_photo',
+                user_id: '$_id',
+                product_id: '$products.product_id',
+                product_name: '$products.product_name',
+                product_photo: '$products.product_photo',
                 review: {
-                  $cond: {
-                    if: {
-                      $and: [{ $eq: [{ $size: '$review' }, 0] }],
-                    },
-                    then: {},
-                    else: {
-                      review_id: { $arrayElemAt: ['$review._id', 0] },
-                      rating: { $arrayElemAt: ['$review.rating', 0] },
-                      body: { $arrayElemAt: ['$review.body', 0] },
-                    },
-                  },
+                  $ifNull: ['$reviews', {}],
                 },
-              },
-            },
-            {
-              $group: {
-                _id: '$product_id',
-                user_id: { $first: '$user_id' },
-                product_name: { $first: '$product_name' },
-                product_photo: { $first: '$product_photo' },
-                review: { $first: '$review' },
               },
             },
           ])
           .toArray();
+
         return result;
       } else if (props.from === 'product') {
         const product_id = new ObjectId(props.product_id);
@@ -149,7 +169,6 @@ class Reviews {
     try {
       const db = getDB();
 
-      // Check if the review exists
       const existingReview = await db.collection(this.collectionName).findOne({
         _id: new ObjectId(props._id),
       });
