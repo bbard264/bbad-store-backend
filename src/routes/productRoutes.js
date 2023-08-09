@@ -10,5 +10,6 @@ router.get(
 );
 
 router.get('/getProductById/:productId?', productController.getProductById);
+router.get('/getRecommendProduct', productController.getRecommendProduct);
 
 module.exports = router;

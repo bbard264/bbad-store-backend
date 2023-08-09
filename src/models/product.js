@@ -90,6 +90,24 @@ class Product {
       throw error;
     }
   }
+
+  static async getRecommendProduct() {
+    try {
+      const db = getDB();
+      const recomendProductList = await db
+        .collection(this.collectionName)
+        .aggregate([{ $sample: { size: 8 } }])
+        .toArray();
+      return {
+        isSuccess: true,
+        message: 'get recomend product complete',
+        data: recomendProductList,
+      };
+    } catch (error) {
+      console.error('Error getting recommended products:', error);
+      return { isSuccess: false, message: `can't get recomend product` };
+    }
+  }
 }
 
 module.exports = Product;

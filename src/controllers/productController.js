@@ -46,6 +46,18 @@ exports.getProductById = async (req, res) => {
     res.status(200).json(product);
   } catch (error) {
     console.log(`Failed to Send Productid ${productId}`);
-    res.status(404).json({ error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getRecommendProduct = async (req, res) => {
+  try {
+    const response = await Product.getRecommendProduct();
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Failed to response recommend product', error);
+    res
+      .status(500)
+      .json({ isSuccess: false, message: `can't get recomend product` });
   }
 };
