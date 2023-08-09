@@ -26,7 +26,7 @@ class Order {
             product_price: 1,
             product_url_name: 1,
             option: 1,
-            product_photo: { $slice: 1 },
+            thumb_photo: 1,
           })
           .toArray();
       }
@@ -158,8 +158,6 @@ class Order {
       orderData.items.forEach((item) => {
         item.product_id = new ObjectId(item.product_id);
       });
-      console.log(orderData);
-      console.log(orderData.items[0]);
       const db = getDB();
       const result = await db
         .collection(this.OrderCollections) // Assuming this is the collection for orders

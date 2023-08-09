@@ -58,7 +58,7 @@ class Reviews {
                 user_id: 1,
                 product_id: '$items.product_id',
                 product_name: '$items.property.product_name',
-                product_photo: '$items.property.product_photo',
+                thumb_photo: '$items.property.thumb_photo',
               },
             },
             {
@@ -68,7 +68,7 @@ class Reviews {
                   $addToSet: {
                     product_id: '$product_id',
                     product_name: '$product_name',
-                    product_photo: '$product_photo',
+                    thumb_photo: '$thumb_photo',
                   },
                 },
               },
@@ -120,7 +120,7 @@ class Reviews {
                 user_id: '$_id',
                 product_id: '$products.product_id',
                 product_name: '$products.product_name',
-                product_photo: '$products.product_photo',
+                thumb_photo: '$products.thumb_photo',
                 review: {
                   $ifNull: ['$reviews', {}],
                 },
