@@ -147,6 +147,7 @@ class Reviews {
 
   static async removeReview(props) {
     try {
+      console.log(props);
       const db = getDB();
       const result = await db
         .collection(this.collectionName)
