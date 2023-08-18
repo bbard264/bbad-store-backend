@@ -46,7 +46,6 @@ class User {
       const newUserId = result.insertedId;
       const photoPath = `/images/user/userphoto/${newUserId}-profile100x100.jpg`;
 
-      // Update the newly inserted document with the photo field
       await db
         .collection(this.collectionName)
         .updateOne({ _id: newUserId }, { $set: { photo: photoPath } });
@@ -54,7 +53,7 @@ class User {
       return newUserId;
     } catch (error) {
       console.error('Error occurred during user creation:', error);
-      throw new Error('Failed to create user. Please try again later.');
+      throw error;
     }
   }
 
@@ -84,33 +83,110 @@ class User {
 
   static async updateUser(userId, updateData) {
     try {
-      if (!!updateData.birthdate) {
-        const birthdate = new Date(updateData.birthdate);
-        if (isNaN(birthdate.getTime())) {
+      const db = getDB();
+      console.log(updateData);
+
+      // Query the existing user data
+      const existingUser = await db
+        .collection(this.collectionName)
+        .findOne({ _id: userId });
+      if (!existingUser) {
+        throw new Error('User not found.');
+      }
+      console.log(existingUser);
+
+      // Compare updateData with existingUser and create newUpdateData
+      const newUpdateData = {};
+      const birthdate = new Date(updateData.birthdate);
+
+      if (
+        birthdate &&
+        (existingUser.birthdate === undefined ||
+          birthdate.toISOString() !== existingUser.birthdate.toISOString())
+      ) {
+        if (!isNaN(birthdate.getTime())) {
+          newUpdateData.birthdate = birthdate;
+        } else {
           throw new Error('Invalid birthdate.');
         }
-        updateData.birthdate = birthdate;
+      }
+      if (
+        updateData.phone !== undefined &&
+        updateData.phone !== existingUser.phone
+      ) {
+        newUpdateData.phone = updateData.phone;
       }
 
-      if (!!updateData.photo && updateData.photo !== '') {
-        updateData.photo = `/images/user/userphoto/${updateData.photo}`;
+      if (updateData.gender && updateData.gender !== existingUser.gender) {
+        newUpdateData.gender = updateData.gender;
       }
 
-      if (updateData.email && updateData.email.length > 100) {
-        throw new Error('Email exceeds maximum length of 100 characters.');
+      if (
+        updateData.email &&
+        updateData.email !== existingUser.email &&
+        updateData.email.length <= 100
+      ) {
+        const emailExists = await db
+          .collection(this.collectionName)
+          .findOne({ email: updateData.email });
+        if (!emailExists || emailExists._id.toString() === userId) {
+          newUpdateData.email = updateData.email;
+        } else {
+          throw new Error('Email already exists.');
+        }
       }
 
-      if (updateData.displayname && updateData.displayname.length > 100) {
-        throw new Error(
-          'Display name exceeds maximum length of 100 characters.'
-        );
+      if (
+        updateData.displayname &&
+        updateData.displayname !== existingUser.displayname &&
+        updateData.displayname.length <= 100
+      ) {
+        const displaynameExists = await db
+          .collection(this.collectionName)
+          .findOne({ displayname: updateData.displayname });
+        if (!displaynameExists || displaynameExists._id.toString() === userId) {
+          newUpdateData.displayname = updateData.displayname;
+        } else {
+          throw new Error('Display name already exists.');
+        }
       }
 
-      const db = getDB();
-      const query = { _id: userId };
+      if (updateData.address) {
+        const { address1, address2, district, province, postcode } =
+          updateData.address;
+
+        const isUpdateNeeded =
+          address1 !== undefined ||
+          address2 !== undefined ||
+          district !== undefined ||
+          province !== undefined ||
+          postcode !== undefined;
+
+        if (isUpdateNeeded) {
+          const existingAddress = existingUser.address || {};
+          if (
+            address1 !== existingAddress.address1 ||
+            address2 !== existingAddress.address2 ||
+            district !== existingAddress.district ||
+            province !== existingAddress.province ||
+            postcode !== existingAddress.postcode
+          ) {
+            newUpdateData.address = {
+              address1,
+              address2,
+              district,
+              province,
+              postcode,
+            };
+          }
+        }
+      }
+
+      console.log(newUpdateData);
+      // Update the user with newUpdateData
       const updateResult = await db
         .collection(this.collectionName)
-        .updateOne(query, { $set: updateData });
+        .updateOne({ _id: userId }, { $set: newUpdateData });
 
       if (updateResult.modifiedCount === 1) {
         // Return true if the user was successfully updated
@@ -124,7 +200,7 @@ class User {
       }
     } catch (error) {
       console.error('Error occurred during user update:', error);
-      throw new Error('Failed to update user. Please try again later.');
+      throw error;
     }
   }
 

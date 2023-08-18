@@ -120,8 +120,8 @@ exports.updateUserInfo = async (req, res) => {
     }
     res.status(200).json({ updateResult: true });
   } catch (error) {
-    console.error(`Can't not Update Infomation`, error);
-    res.status(500).json({ error: `Can't not Update Infomation` });
+    console.error('Error occurred during user update:', error);
+    res.status(500).json({ error: error.message });
   }
 };
 
