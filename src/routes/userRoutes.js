@@ -4,7 +4,19 @@ const userController = require('../controllers/userController');
 const upload = require('../config/services/multerUpload');
 const authentication = require('../config/passport/authentication');
 
-router.post('/register', userController.registerUser);
+const checkIsDemo = (req, res, next) => {
+  const isDemo = false;
+
+  if (isDemo) {
+    return res
+      .status(403)
+      .json({ message: "Demo version: can't create new User" });
+  }
+
+  next();
+};
+
+router.post('/register', checkIsDemo, userController.registerUser);
 router.post('/login', userController.loginUser);
 router.get('/getUserById', authentication, userController.getUserInfo);
 router.put(

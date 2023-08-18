@@ -27,6 +27,16 @@ class User {
 
   static async createUser(userData) {
     try {
+      if (userData.email && userData.email.length > 100) {
+        throw new Error('Email exceeds maximum length of 100 characters.');
+      }
+
+      if (userData.displayname && userData.displayname.length > 100) {
+        throw new Error(
+          'Display name exceeds maximum length of 100 characters.'
+        );
+      }
+
       const db = getDB();
 
       const result = await db
@@ -75,10 +85,25 @@ class User {
   static async updateUser(userId, updateData) {
     try {
       if (!!updateData.birthdate) {
-        updateData.birthdate = new Date(updateData.birthdate);
+        const birthdate = new Date(updateData.birthdate);
+        if (isNaN(birthdate.getTime())) {
+          throw new Error('Invalid birthdate.');
+        }
+        updateData.birthdate = birthdate;
       }
+
       if (!!updateData.photo && updateData.photo !== '') {
         updateData.photo = `/images/user/userphoto/${updateData.photo}`;
+      }
+
+      if (updateData.email && updateData.email.length > 100) {
+        throw new Error('Email exceeds maximum length of 100 characters.');
+      }
+
+      if (updateData.displayname && updateData.displayname.length > 100) {
+        throw new Error(
+          'Display name exceeds maximum length of 100 characters.'
+        );
       }
 
       const db = getDB();

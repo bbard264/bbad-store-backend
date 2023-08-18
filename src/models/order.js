@@ -70,6 +70,10 @@ class Order {
         .collection(this.CartCollections)
         .findOne({ user_id: new ObjectId(props.user_id) });
 
+      if (cart && cart.items && cart.items.length >= 100) {
+        throw new Error('Exceeds cart item limit of 100');
+      }
+
       if (!cart) {
         // If the user's cart doesn't exist, create a new cart and add the product to it.
         await db.collection(this.CartCollections).insertOne({
@@ -110,7 +114,12 @@ class Order {
       }
     } catch (error) {
       console.error('Error occurred during adding product to cart:', error);
-      return { addToCart: false, message: `Can't add product to cart` };
+      const errorMessage =
+        error.message === 'Exceeds cart item limit of 100'
+          ? "Exceeds cart item limit of 100. Can't add product to cart"
+          : `Can't add product to cart`;
+
+      return { addToCart: false, message: errorMessage };
     }
   }
 
