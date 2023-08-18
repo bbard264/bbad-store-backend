@@ -6,6 +6,10 @@ class Reviews {
 
   static async createNewReview(props) {
     try {
+      const bodyText = props.body;
+      if (bodyText.length >= 500) {
+        throw new Error('Body text exceeds maximum length of 500 characters.');
+      }
       const db = getDB();
 
       // Check if the user has already reviewed the product
