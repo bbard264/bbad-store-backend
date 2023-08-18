@@ -121,7 +121,7 @@ exports.updateUserInfo = async (req, res) => {
     res.status(200).json({ updateResult: true });
   } catch (error) {
     console.error('Error occurred during user update:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
