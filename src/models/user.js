@@ -84,7 +84,6 @@ class User {
   static async updateUser(userId, updateData) {
     try {
       const db = getDB();
-      console.log(updateData);
 
       // Query the existing user data
       const existingUser = await db
@@ -93,7 +92,6 @@ class User {
       if (!existingUser) {
         throw new Error('User not found.');
       }
-      console.log(existingUser);
 
       // Compare updateData with existingUser and create newUpdateData
       const newUpdateData = {};
@@ -185,7 +183,6 @@ class User {
         }
       }
 
-      console.log(newUpdateData);
       // Update the user with newUpdateData
       const updateResult = await db
         .collection(this.collectionName)

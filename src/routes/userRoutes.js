@@ -16,8 +16,13 @@ const checkIsDemo = (req, res, next) => {
   }
 };
 
+const logRequests = (req, res, next) => {
+  console.log('Received request:', req.url);
+  next();
+};
+
 router.post('/register', checkIsDemo, userController.registerUser);
-router.post('/login', userController.loginUser);
+router.post('/login', logRequests, userController.loginUser);
 router.get('/getUserById', authentication, userController.getUserInfo);
 router.put(
   '/updateUser',

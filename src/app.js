@@ -20,14 +20,6 @@ console.log = (...args) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const logRequests = (req, res, next) => {
-  console.log('Received request:', req.url);
-  next();
-};
-
-// Apply logRequests middleware to every incoming request
-app.use(logRequests);
-
 app.use('/images', express.static('./images', { maxAge: 86400 }));
 app.use('/api/product', productRoutes);
 app.use('/api/category', categoryRoutes);

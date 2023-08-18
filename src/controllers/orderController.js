@@ -35,7 +35,7 @@ exports.removeFromCart = async (req, res) => {
       user_id: req.user._id,
       product_id: req.query.product_id,
     });
-    console.log(response);
+
     res.status(200).json(response);
   } catch (error) {
     console.error('Failed to remove product from cart:', error);

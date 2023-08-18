@@ -22,13 +22,11 @@ exports.getProductsList = async (req, res) => {
 
   try {
     if (isNaN(page) || !Number.isInteger(page) || page < 1) {
-      console.log('Failed to Send Products List: Invalid page number');
       return res.status(400).json({ error: 'Invalid page number' });
     }
 
     const products = await Product.getListProducts(page, categoryId);
     if (products.length === 0) {
-      console.log('Failed to Send Products List: No products found');
       return res.status(400).json({ error: 'No products found' });
     }
 
@@ -45,7 +43,6 @@ exports.getProductById = async (req, res) => {
     const product = await Product.getProductById(productId);
     res.status(200).json(product);
   } catch (error) {
-    console.log(`Failed to Send Productid ${productId}`);
     res.status(500).json({ error: error.message });
   }
 };

@@ -3,7 +3,6 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res) => {
-  console.log(req.body);
   const { email, displayname, password } = req.body;
 
   if (!email || !password || !displayname) {
@@ -46,7 +45,6 @@ exports.registerUser = async (req, res) => {
       const newUserID = await User.createUser(newUserDocument);
 
       // Registration successful
-      console.log('NewUserID:', newUserID);
       return res.status(200).json({ registerSuccess: true });
     } catch (error) {
       // Error occurred while saving the user to the database
