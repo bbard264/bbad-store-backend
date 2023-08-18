@@ -1,7 +1,8 @@
 const { MongoClient } = require('mongodb');
 
 // Connection URL
-const url = 'mongodb://localhost:27017';
+const url =
+  'mongodb+srv://bbadBackEnd:HKcSyfUuCqnUzwwH@bbadstore.r6t7wpm.mongodb.net/';
 
 // Database Name
 const dbName = 'bbad';
