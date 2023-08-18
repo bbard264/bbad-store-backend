@@ -97,17 +97,20 @@ class User {
 
       // Compare updateData with existingUser and create newUpdateData
       const newUpdateData = {};
-      const birthdate = new Date(updateData.birthdate);
 
-      if (
-        birthdate &&
-        (existingUser.birthdate === undefined ||
-          birthdate.toISOString() !== existingUser.birthdate.toISOString())
-      ) {
-        if (!isNaN(birthdate.getTime())) {
-          newUpdateData.birthdate = birthdate;
-        } else {
-          throw new Error('Invalid birthdate.');
+      if (updateData.birthdate !== null && updateData.birthdate !== undefined) {
+        const birthdate = new Date(updateData.birthdate);
+
+        if (
+          birthdate &&
+          (existingUser.birthdate === undefined ||
+            birthdate.toISOString() !== existingUser.birthdate.toISOString())
+        ) {
+          if (!isNaN(birthdate.getTime())) {
+            newUpdateData.birthdate = birthdate;
+          } else {
+            throw new Error('Invalid birthdate.');
+          }
         }
       }
       if (
