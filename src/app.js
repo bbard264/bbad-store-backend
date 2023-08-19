@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -19,6 +20,12 @@ console.log = (...args) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(
+  cors({
+    origin: 'https://master--dynamic-stroopwafel-0913e8.netlify.app',
+  })
+);
 
 app.use('/images', express.static('./images', { maxAge: 86400 }));
 app.use('/api/product', productRoutes);
