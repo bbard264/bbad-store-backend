@@ -1,9 +1,11 @@
 const app = require('./app');
 const { connectToDB } = require('./database');
-const port = 4000;
+const DEFAULT_PORT = 10000;
 
 connectToDB();
 
+const port = process.env.PORT || DEFAULT_PORT;
+
 app.listen(port, () => {
-  console.log(`server start @ http://localhost:${port}/`);
+  console.log(`Server started @ ${port}`);
 });
