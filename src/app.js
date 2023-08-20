@@ -34,4 +34,10 @@ app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/review', reviewRoutes);
 
+app.get('/api/checkConnection', (req, res) => {
+  res
+    .status(200)
+    .json({ isConnect: true, message: 'Connection is successful.' });
+});
+
 module.exports = app;
