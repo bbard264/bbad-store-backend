@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: 'https://master--dynamic-stroopwafel-0913e8.netlify.app',
+    origin: 'https://bbad-shop.netlify.app/',
   })
 );
 
