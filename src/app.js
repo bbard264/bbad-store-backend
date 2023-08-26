@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: 'https://bbad-shop.netlify.app/',
+    origin: 'https://bbad-shop.netlify.app',
   })
 );
 
