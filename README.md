@@ -1,24 +1,26 @@
-# BBAD Store Backend
+# Welcome to BBAD Shop Backend
 
-Welcome to the BBAD Store Backend repository. This repository contains the backend code for the BBAD Store project, a single-vendor e-commerce platform built with React.js, Node.js, Express.js, and MongoDB Atlas.
+![BBAD Shop Showcase](https://github.com/ppoompich/bbad-store-frontend/raw/master/public/showcase.jpg)
 
-## Introduction
+Hey there, welcome to the BBAD Shop Backend repository! 🚀 This is where the magic happens behind the scenes for the BBAD Shop project, a delightful single-vendor e-commerce platform powered by React.js, Node.js, Express.js, and MongoDB Atlas.
 
-The BBAD Store Backend is responsible for handling the server-side logic, API endpoints, and database configurations required to run the BBAD Store application. This README provides an overview of the backend.
+## About BBAD Shop Backend
 
-## Technologies Used
+BBAD Shop Backend is the heart of our e-commerce platform. It handles everything from serving APIs to managing the database, ensuring a seamless shopping experience for our users. Dive into this README to explore the inner workings of our backend.
 
-The backend of BBAD Store leverages the following technologies and frameworks:
+## Tech Stack
 
-- **Node.js:** Used for server-side development.
-- **Express.js:** Used to build RESTful APIs.
-- **MongoDB Atlas:** The cloud-based database used to store application data.
-- **JWT (JSON Web Tokens):** Used for user authentication.
+BBAD Shop Backend is built on a robust tech stack:
 
-## Frontend Repository
+- **Node.js:** Our go-to for server-side wizardry.
+- **Express.js:** The engine that powers our RESTful APIs.
+- **MongoDB Atlas:** Our trusty cloud-based database, home to all our precious data.
+- **JWT (JSON Web Tokens):** Keeping things secure with user authentication.
 
-For the frontend code of the BBAD Store project, visit the [BBAD Store Frontend Repository](https://github.com/ppoompich/bbad-store-frontend).
+## Looking for the Frontend?
 
-## Presentation
+If you want to explore the frontend magic that complements our backend, hop on over to the [BBAD Shop Frontend Repository](https://github.com/ppoompich/bbad-store-frontend).
 
-To view the presentation for BBAD Store, click [here](https://docs.google.com/presentation/d/1M3cocFfnALWEO_FCrFaipgCN156dxs-HRiEaPHZBCuI/edit?usp=sharing).
+## Discover More
+
+Curious to learn more about BBAD Shop? Dive into our presentation: [Presentation Slides](https://docs.google.com/presentation/d/1M3cocFfnALWEO_FCrFaipgCN156dxs-HRiEaPHZBCuI/edit?usp=sharing). We've got a lot to share!
