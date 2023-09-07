@@ -24,3 +24,8 @@ If you want to explore the frontend magic that complements our backend, hop on o
 ## Discover More
 
 Curious to learn more about BBAD Shop? Dive into our presentation: [Presentation Slides](https://docs.google.com/presentation/d/1M3cocFfnALWEO_FCrFaipgCN156dxs-HRiEaPHZBCuI/edit?usp=sharing). We've got a lot to share!
+
+## Deployment
+
+BBAD Shop is deployed to [https://bbad-shop.netlify.app/](https://bbad-shop.netlify.app/).
+
